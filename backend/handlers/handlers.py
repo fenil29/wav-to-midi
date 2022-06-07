@@ -1,14 +1,15 @@
 from businesslogic.wav_to_midi import WavToMidi
 
 
-class Test:
+class Convert:
 
     def __int__(self):
         return
 
-    def convert_file(self):
-        WavToMidi.convert_file('./sample3.wav', 'sample.mid')
+    @staticmethod
+    def convert_file(source_file_name, target_file_name):
+        WavToMidi.convert_file(source_file_name, target_file_name)
 
 
-t = Test()
-t.convert_file()
+# t = Test()
+# t.convert_file()
