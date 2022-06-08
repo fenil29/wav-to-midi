@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, send_file
-import uuid
 import requests
 from handlers.handlers import Convert
 
@@ -29,16 +28,18 @@ def upload_file_page():
 def upload_file():
     # get uploaded file
     uploaded_file = request.files['file']
-    file_name = str(uuid.uuid4())
     # file_name = str(uuid.uuid4()) + uploaded_file.filename
     if uploaded_file.filename != '':
-        # get file name and add .wav extension
-        file_name = uploaded_file.filename.split('.')[0]
-        uploaded_file.save(file_name + ".wav")
-        # convert file to midi format and download to front-end
-        Convert.convert_file(file_name + ".wav", file_name + ".mid")
-        return send_file(path_or_file=file_name + ".mid", mimetype="audio/midi", as_attachment=True)
-    # return 'file uploaded successfully'
+        # check if the uploaded file is a wav file
+        split = uploaded_file.filename.split('.')
+        if split.__len__() == 2 and split[1] == 'wav':
+            # get file name and add .wav extension
+            file_name = uploaded_file.filename.split('.')[0]
+            uploaded_file.save(file_name + ".wav")
+            # convert file to midi format and download to front-end
+            Convert.convert_file(file_name + ".wav", file_name + ".mid")
+            return send_file(path_or_file=file_name + ".mid", mimetype="audio/midi", as_attachment=True)
+    return "Error in the uploaded file", 400
 
 
 # uplod method when link is uploaded
