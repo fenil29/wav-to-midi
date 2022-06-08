@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_file
 import uuid
 from handlers.handlers import Convert
 
@@ -27,9 +27,12 @@ def upload_file():
     file_name = str(uuid.uuid4())
     # file_name = str(uuid.uuid4()) + uploaded_file.filename
     if uploaded_file.filename != '':
-        uploaded_file.save("./file_wav/" + file_name + ".wav")
-    Convert.convert_file("./file_wav/" +file_name + ".wav", "./file_midi/" +file_name + ".mid")
-    return 'file uploaded successfully'
+        # print(uploaded_file.filename)
+        file_name = uploaded_file.filename.split('.')[0]
+        uploaded_file.save(file_name + ".wav")
+    Convert.convert_file(file_name + ".wav", file_name + ".mid")
+    return send_file(path_or_file=file_name + ".mid", mimetype="audio/midi", as_attachment=True)
+    # return 'file uploaded successfully'
 
 
 if __name__ == "__main__":

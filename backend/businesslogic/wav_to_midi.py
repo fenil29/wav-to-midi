@@ -1,7 +1,6 @@
 import numpy as np
 import librosa
 import midiutil
-import sys
 
 # class to convert WAV file to MIDI file
 class WavToMidi:
@@ -223,7 +222,7 @@ class WavToMidi:
         None.
         """
         bpm = librosa.beat.tempo(y)[0]
-        print(bpm)
+        # print(bpm)
         quarter_note = 60 / bpm
         ticks_per_quarter = 1024
 
@@ -264,16 +263,8 @@ class WavToMidi:
 
         states = librosa.sequence.viterbi(prob, tran_matrix, p_init=init_mat)
         # print(states)
-        pianoroll = WavToMidi.convert_states_to_pianoroll(states, minimum_note, max_note, hop_length / sr)
+        piano_format = WavToMidi.convert_states_to_pianoroll(states, minimum_note, max_note, hop_length / sr)
         # print(pianoroll)
-        MyMIDI = WavToMidi.convert_pianoroll_to_midi(y, pianoroll)
+        midi_format = WavToMidi.convert_pianoroll_to_midi(y, piano_format)
         with open(file_out, "wb") as output_file:
-            MyMIDI.writeFile(output_file)
-
-
-# print("Welcome!")
-# file_in = sys.argv[1]
-# file_out = sys.argv[2]
-# print(sys.argv[1], sys.argv[2])
-# print(type(sys.argv[1]))
-#WavToMidi.convert_file(file_in, file_out)
+            midi_format.writeFile(output_file)

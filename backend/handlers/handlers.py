@@ -9,7 +9,3 @@ class Convert:
     @staticmethod
     def convert_file(source_file_name, target_file_name):
         WavToMidi.convert_file(source_file_name, target_file_name)
-
-
-# t = Test()
-# t.convert_file()
