@@ -2,12 +2,10 @@ import numpy as np
 import librosa
 import midiutil
 
+
 # class to convert WAV file to MIDI file
 class WavToMidi:
-
-    @staticmethod
-    def build_transition_matrix(minimum_note, max_note, p_stay_note, p_stay_silence):
-        """
+    """
         Returns the transition matrix with one silence state and two states
         (onset and sustain) for each note.
         Parameters
@@ -19,13 +17,14 @@ class WavToMidi:
         p_stay_note : float, between 0 and 1
             Probability of a sustain state returning to itself.
         p_stay_silence : float, between 0 and 1
-            Probability of the silence state returning to itselt.
+            Probability of the silence state returning to itself.
         Returns
         -------
-        T : numpy 2x2 array
-            Trasition matrix in which T[i,j] is the probability of
+        a 2x2 Trasition matrix in which T[i,j] is the probability of
             going from state i to state j
-        """
+    """
+    @staticmethod
+    def build_transition_matrix(minimum_note, max_note, p_stay_note, p_stay_silence):
 
         midi_min = librosa.note_to_midi(minimum_note)
         midi_max = librosa.note_to_midi(max_note)
@@ -57,17 +56,12 @@ class WavToMidi:
 
         return np_matrix
 
-    @staticmethod
-    def calc_probabilities(y, minimum_note, max_note, sr, frame_length, window_length, hop_length, pitch_acc, voiced_acc, onset_acc,
-                      spread):
-        """
+    """
         Estimate prior (observed) probabilities from audio signal
 
         Parameters
         ----------
-        y : 1-D numpy array
-            Array containing audio samples
-
+        y : 1-D numpy array containing audio samples
         minimum_note : string, 'A#4' format
             Lowest note supported by this estimator
         max_note : string, 'A#4' format
@@ -89,10 +83,11 @@ class WavToMidi:
             due to vibrato or glissando.
         Returns
         -------
-        P : 2D numpy array.
-            P[j,t] is the prior probability of being in state j at time t.
-        """
-
+        2D array where P[j,t] is the prior probability of being in state j at time t.
+    """
+    @staticmethod
+    def calc_probabilities(y, minimum_note, max_note, sr, frame_length, window_length, hop_length,
+                           pitch_acc, voiced_acc, onset_acc, spread):
         fmin = librosa.note_to_hz(minimum_note)
         fmax = librosa.note_to_hz(max_note)
         midi_min = librosa.note_to_midi(minimum_note)
@@ -133,9 +128,7 @@ class WavToMidi:
 
         return P
 
-    @staticmethod
-    def convert_states_to_pianoroll(states, minimum_note, max_note, hop_time):
-        """
+    """
         Converts state sequence to an intermediate, internal piano-roll notation
         Parameters
         ----------
@@ -152,7 +145,9 @@ class WavToMidi:
         output : List of lists
             output[i] is the i-th note in the sequence. Each note is a list
             described by [onset_time, offset_time, pitch].
-        """
+    """
+    @staticmethod
+    def convert_states_to_pianoroll(states, minimum_note, max_note, hop_time):
         midi_min = librosa.note_to_midi(minimum_note)
         midi_max = librosa.note_to_midi(max_note)
 
@@ -206,21 +201,14 @@ class WavToMidi:
 
         return output
 
-    @staticmethod
-    def convert_pianoroll_to_midi(y, pianoroll):
-        """
-
+    """
         Parameters
         ----------
-        y : 1D numpy array.
-            Audio signal (used to estimate BPM)
-
-        pianoroll : list
-            A pianoroll list as estimated by states_to_pianoroll().
-        Returns
-        -------
-        None.
-        """
+        1D numpy array containing audio signal (used to estimate BPM)
+        A pianoroll list as estimated by states_to_pianoroll function.
+    """
+    @staticmethod
+    def convert_pianoroll_to_midi(y, pianoroll):
         bpm = librosa.beat.tempo(y)[0]
         # print(bpm)
         quarter_note = 60 / bpm
@@ -241,6 +229,7 @@ class WavToMidi:
 
         return MyMIDI
 
+    # base method to convert wav file to midi format
     @staticmethod
     def convert_file(file_in, file_out):
         minimum_note = 'A2'
