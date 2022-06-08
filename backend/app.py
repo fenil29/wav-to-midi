@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, send_file
 import uuid
+import requests
 from handlers.handlers import Convert
 
 app = Flask(__name__)
@@ -33,6 +34,15 @@ def upload_file():
     Convert.convert_file(file_name + ".wav", file_name + ".mid")
     return send_file(path_or_file=file_name + ".mid", mimetype="audio/midi", as_attachment=True)
     # return 'file uploaded successfully'
+
+
+@app.route('/upload_wav_link', methods=['GET', 'POST'])
+def upload_wav_link():
+    url = request.form['wavLink']
+    r = requests.get(url, allow_redirects=True)
+    open('wav_file.wav', 'wb').write(r.content)
+    Convert.convert_file("wav_file.wav", "wav_file.mid")
+    return send_file(path_or_file="wav_file.mid", mimetype="audio/midi", as_attachment=True)
 
 
 if __name__ == "__main__":

@@ -12,15 +12,30 @@
     />
   </head>
   <body>
+	<h1>WAV to MIDI Convertor</h1>
     <form
       action="http://localhost:5000/uploader"
       method="POST"
       enctype="multipart/form-data"
       class="file-upload-form"
     >
-      <h1>WAV to MIDI Convertor</h1>
+      <h2>Upload file to convert</h1>
       <input type="file" name="file" />
       <input type="submit" />
     </form>
+	
+	<h1>OR</h1>
+	
+	<form
+      action="http://localhost:5000/upload_wav_link"
+      method="POST"
+	  enctype="application/x-www-form-urlencoded"
+      class="file-upload-form"
+	 >
+      <h2>Provide a link to a wav</h2>
+      <input type="text" name="wavLink"id="wavLink"/>
+      <input type="submit" />
+    </form>
+	
   </body>
 </html>
